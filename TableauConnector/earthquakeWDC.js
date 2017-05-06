@@ -2,25 +2,38 @@
     var myConnector = tableau.makeConnector();
 
     myConnector.getSchema = function (schemaCallback) {
-        var cols = [
-            { id: "mag", alias: "magnitude", dataType: tableau.dataTypeEnum.float },
-            { id: "title", alias: "title", dataType: tableau.dataTypeEnum.string },
-            { id: "url", alias: "url", dataType: tableau.dataTypeEnum.string },
-            { id: "lat", alias: "latitude", columnRole: "dimension", dataType: tableau.dataTypeEnum.float },
-            { id: "lon", alias: "longitude", columnRole: "dimension", dataType: tableau.dataTypeEnum.float }
-        ];
+        var cols = [{
+            id: "id",
+            dataType: tableau.dataTypeEnum.string
+        }, {
+            id: "mag",
+            alias: "magnitude",
+            dataType: tableau.dataTypeEnum.float
+        }, {
+            id: "title",
+            alias: "title",
+            dataType: tableau.dataTypeEnum.string
+        }, {
+            id: "lat",
+            alias: "latitude",
+            dataType: tableau.dataTypeEnum.float
+        }, {
+            id: "lon",
+            alias: "longitude",
+            dataType: tableau.dataTypeEnum.float
+        }];
 
-        var tableInfo = {
+        var tableSchema = {
             id: "earthquakeFeed",
             alias: "Earthquakes with magnitude greater than 4.5 in the last seven days",
             columns: cols
         };
 
-        schemaCallback([tableInfo]);
+        schemaCallback([tableSchema]);
     };
 
     myConnector.getData = function (table, doneCallback) {
-        $.getJSON("http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson", function (resp) {
+        $.getJSON("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson", function (resp) {
             var feat = resp.features,
                 tableData = [];
 

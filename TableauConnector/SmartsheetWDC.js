@@ -67,24 +67,24 @@
                 for (var i = 0, len = feat.length; i < len; i++) {
                     tableData.push({
                         "jobName": feat[i].cells[0].displayValue,
-                        "jobDescription" : feat[i].cells[1].displayValue,
-                        "requestor" : feat[i].cells[2].displayValue,
-                        "requestedCompletionDate" : feat[i].cells[3].displayValue,
-                        "estimatedJobSize" : feat[i].cells[4].displayValue,
-                        "priority" : feat[i].cells[5].displayValue,
-                        "assignedTo" : feat[i].cells[6].displayValue,
-                        "status" : feat[i].cells[7].displayValue,
-                        "team" : feat[i].cells[8].displayValue
+                        "jobDescription": feat[i].cells[1].displayValue,
+                        "requestor": feat[i].cells[2].displayValue,
+                        "requestedCompletionDate": feat[i].cells[3].displayValue,
+                        "estimatedJobSize": feat[i].cells[4].displayValue,
+                        "priority": feat[i].cells[5].displayValue,
+                        "assignedTo": feat[i].cells[6].displayValue,
+                        "status": feat[i].cells[7].displayValue,
+                        "team": feat[i].cells[8].displayValue
                     });
                 }
 
                 table.appendRows(tableData);
                 doneCallback();
             },
-            error: function(jqXHR, status, error) {  tableau.log("SmartsheetWDC Error: " + status + " :: " + error); },
+            error: function (jqXHR, status, error) { tableau.log("SmartsheetWDC Error: " + status + " :: " + error); },
             beforeSend: setHeader
         });
-    });
+    };
 
     function setHeader(xhr) {
         xhr.setRequestHeader('Authorization', 'Bearer 6plyzwbv0jeufdhbolemhsxgfg');

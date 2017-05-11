@@ -1,4 +1,5 @@
 ﻿(function () {
+
     // Create the connector object
     var myConnector = tableau.makeConnector();
 
@@ -54,11 +55,18 @@
 
     // Download the data
     myConnector.getData = function (table, doneCallback) {
+        authObj = JSON.parse(tableau.connectionData);
 
         $.ajax({
             url: 'https://api.smartsheet.com/2.0/sheets/2455526790457220',
             type: 'GET',
-            dataType: 'json',
+            dataType: 'jsonp',
+            headers: {
+                "Authorization": authObj.value
+            },
+            data: {
+                "Authorization": authObj.value
+            },
             success: function (resp) {
                 var feat = resp.rows,
                     tableData = [];
@@ -81,14 +89,17 @@
                 table.appendRows(tableData);
                 doneCallback();
             },
-            error: function (jqXHR, status, error) { tableau.log("SmartsheetWDC Error: " + status + " :: " + error); },
-            beforeSend: setHeader
+            error: function (jqXHR, status, error) {
+                tableau.log("SmartsheetWDC Error: " + status + " :: " + error);
+            },
+            beforeSend: function (xhr, authObj) {
+                authObj = JSON.parse(tableau.connectionData);
+                xhr.setRequestHeader(authObj.key, authObj.value);
+//                xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+            }
         });
     };
 
-    function setHeader(xhr) {
-        xhr.setRequestHeader('Authorization', 'Bearer 6plyzwbv0jeufdhbolemhsxgfg');
-    }
 
       
 
@@ -97,8 +108,16 @@
     // Create event listeners for when the user submits the form
     $(document).ready(function () {
         $("#submitButton").click(function () {
-            tableau.connectionName = "USGS Earthquake Feed"; // This will be the data source name in Tableau
-            tableau.submit(); // This sends the connector object to Tableau
+            // create JS object with user data
+            var authObj = {
+                key: $('#key').val().trim(),
+                value: $('#value').val().trim()
+            };
+        
+            // stringify and store user data in tableau connectionData property
+            tableau.connectionData = JSON.stringify(authObj);
+            tableau.connectionName = "Smartsheet Feed";
+            tableau.submit();
         });
     });
 })();
